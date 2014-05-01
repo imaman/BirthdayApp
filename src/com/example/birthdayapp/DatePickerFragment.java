@@ -19,6 +19,10 @@ public class DatePickerFragment extends DialogFragment
         this.timeInMillis = millis;
     }
 
+    public long getTime() {
+        return timeInMillis;
+    }
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
@@ -33,6 +37,13 @@ public class DatePickerFragment extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        // Do something with the date chosen by the user
+        final Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, day);
+        timeInMillis = c.getTimeInMillis();
+        
+        EditActivity callingActivity = (EditActivity) getActivity();
+        callingActivity.birthdateChanged(timeInMillis);        
     }
 }

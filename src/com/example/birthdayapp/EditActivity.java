@@ -26,6 +26,10 @@ public class EditActivity extends ActionBarActivity {
                 .get("birthdate");
         datePicker.setTime(birthdateMillis);
         
+        birthdateChanged(birthdateMillis);
+    }
+
+    public void birthdateChanged(long birthdateMillis) {
         Date date = new Date();
         date.setTime(birthdateMillis);
 
