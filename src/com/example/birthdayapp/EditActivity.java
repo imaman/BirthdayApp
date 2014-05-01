@@ -19,6 +19,7 @@ public class EditActivity extends ActionBarActivity {
     private Button birthdateButton;
     private DatePickerFragment datePicker;
     private EditText nameEdit;
+    private long birthDateInMillis = 0;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class EditActivity extends ActionBarActivity {
         View view = findViewById(R.id.birthdate_button);
         birthdateButton = (Button) view;
         birthdateButton.setText(sdf.format(date));
+        this.birthDateInMillis = birthdateMillis;
     }
 
     @Override
@@ -74,6 +76,7 @@ public class EditActivity extends ActionBarActivity {
         if (id == R.id.action_done) {
             Intent resultIntent = new Intent();
             resultIntent.putExtra("name", nameEdit.getText().toString());
+            resultIntent.putExtra("birthdate", birthDateInMillis);
             setResult(Activity.RESULT_OK, resultIntent);
             finish();
         }

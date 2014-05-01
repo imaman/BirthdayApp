@@ -82,7 +82,8 @@ public class ContactsActivity extends ActionBarActivity {
         case (EDIT_CODE) : { 
           if (resultCode == Activity.RESULT_OK) { 
               String name = data.getStringExtra("name");
-              Toast.makeText(this, "Got name: " + name, Toast.LENGTH_LONG).show();
+              long bd = data.getLongExtra("birthdate", 0);
+              Toast.makeText(this, "Got name: " + name + ", born " + bd, Toast.LENGTH_LONG).show();
           } 
           break; 
         } 
