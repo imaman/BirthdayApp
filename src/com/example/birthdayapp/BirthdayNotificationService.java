@@ -51,20 +51,24 @@ public class BirthdayNotificationService extends Service {
         mNM.notify(NOTIFICATION, noti);
     }
     
+    private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
+    
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
 
-        new MyTask().execute();
+        
+        new CheckUpcomingBirthdaysTask().execute(400 * DAY_IN_MILLIS);
         
         return START_STICKY;
     }
     
-    class MyTask extends AsyncTask<String, Integer, String> {
+    class CheckUpcomingBirthdaysTask extends AsyncTask<Long, Integer, String> {
 
         @Override
-        protected String doInBackground(String... params) {
+        protected String doInBackground(Long... params) {
+            long thresholdInMillis = params[0];
             Date now = new Date();
             Calendar cal = Calendar.getInstance();
             cal.setTime(now);
