@@ -1,15 +1,14 @@
 package com.example.birthdayapp;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 
 public class ContactsActivity extends ActionBarActivity {
 
@@ -23,6 +22,10 @@ public class ContactsActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+        
+		Intent intent = new Intent(this, EditActivity.class);
+		startActivity(intent);
+        
     }
 
 
