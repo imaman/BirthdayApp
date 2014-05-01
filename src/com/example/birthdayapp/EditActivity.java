@@ -21,6 +21,7 @@ public class EditActivity extends ActionBarActivity {
     private EditText nameEdit;
     private long birthDateInMillis = 0;
     private EditText emailEdit;
+    private long contactId = -1;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +36,11 @@ public class EditActivity extends ActionBarActivity {
         String name = "???";
         String emailAddress = "???";
         long birthdateMillis = new Date().getTime();
+        contactId = -1;
         if (extras.getBoolean("create",  false)) {
             
         } else {
+            contactId = extras.getLong(Items.CONTACT_ID);
             name = extras.getString(Items.ITEM_NAME, name);
             nameEdit.setText(name);
             
@@ -81,6 +84,7 @@ public class EditActivity extends ActionBarActivity {
         }
         if (id == R.id.action_done) {
             Intent resultIntent = new Intent();
+            resultIntent.putExtra(Items.CONTACT_ID, contactId);
             resultIntent.putExtra(Items.ITEM_NAME, nameEdit.getText().toString());
             resultIntent.putExtra(Items.ITEM_BIRTHDATE, birthDateInMillis);
             resultIntent.putExtra(Items.ITEM_EMAIL, emailEdit.getText().toString());

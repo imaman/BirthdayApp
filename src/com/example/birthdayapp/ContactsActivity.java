@@ -2,25 +2,24 @@ package com.example.birthdayapp;
 
 import java.util.List;
 
-import com.example.birthdayapp.ContactEntryContract.ContactEntry;
-
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.birthdayapp.ContactEntryContract.ContactEntry;
 
-public class ContactsActivity extends ActionBarActivity implements OnItemClickListener {
+
+public class ContactsActivity extends ActionBarActivity {
 
     private static final int EDIT_CODE = 1;
 
@@ -45,24 +44,67 @@ public class ContactsActivity extends ActionBarActivity implements OnItemClickLi
 		
         contactsListView = (ListView)findViewById(R.id.contactsListView);
         contactDbHelper = new ContactDbHelper(this);
-//        addEntriesToDb();
+        //addEntriesToDb();
         contactsList = contactDbHelper.getContacts();
-        contactsAdapter = new ContactsAdapter(this, contactsList);
+        contactsAdapter = new ContactsAdapter(this, contactsList, this);
         contactsListView.setAdapter(contactsAdapter);
-        contactsListView.setOnItemClickListener(this);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-            long id) {
+    public void editContact(long id) {
         Intent intent = new Intent(this, EditActivity.class);
-        ContactEntry currContact = contactsList.get(position);
-		intent.putExtra(Items.ITEM_POSITION, position);
-		intent.putExtra(Items.ITEM_BIRTHDATE, currContact.getBirthDate());
-        intent.putExtra(Items.ITEM_NAME, currContact.getName());
-        intent.putExtra(Items.ITEM_EMAIL, currContact.getEmail());
+        ContactEntry contact = contactFromId(id);
+        
+        intent.putExtra(Items.CONTACT_ID, contact.getEntryId());
+        intent.putExtra(Items.ITEM_BIRTHDATE, contact.getBirthDate());
+        intent.putExtra(Items.ITEM_NAME, contact.getName());
+        intent.putExtra(Items.ITEM_EMAIL, contact.getEmail());
 		startActivityForResult(intent, EDIT_CODE);
     }
+        
+    private ContactEntry contactFromId(long id) {
+        for (ContactEntry curr : contactsList) {
+            if (curr.getEntryId() == id)
+                return curr;
+        }
+        return null;
+    }
+    
+    public boolean deleteContact(final long id_) {
+        final ContactEntry contactToDelete = contactFromId(id_);
+        if (contactToDelete == null)
+            return true;
+        
+        
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        // Setting Dialog Title
+        alertDialog.setTitle("Delete?");
+
+        // Setting Icon to Dialog
+        alertDialog.setIcon(R.drawable.ic_launcher);
+ 
+        // Setting Positive "Yes" Button
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                // TODO(imaman): this should be an async task.
+                contactDbHelper.deleteEntry(contactToDelete.getEntryId());
+                contactsList.remove(contactToDelete);
+                contactsAdapter.notifyDataSetChanged();
+            }
+        });
+ 
+        // Setting Negative "NO" Button
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+ 
+        // Showing Alert Message
+        alertDialog.show();
+        return true;
+    }
+    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,8 +142,14 @@ public class ContactsActivity extends ActionBarActivity implements OnItemClickLi
       switch(requestCode) { 
         case (EDIT_CODE) : { 
           if (resultCode == Activity.RESULT_OK) {
-        	  long position = data.getLongExtra(Items.ITEM_POSITION, 0);
-        	  ContactEntry contact = contactsList.get((int) position);
+        	  long contactId = data.getLongExtra(Items.CONTACT_ID, -1);
+        	  if (contactId < 0)
+        	      break;
+        	  ContactEntry contact = contactFromId(contactId);
+        	  if (contact == null) {
+        	      Toast.makeText(this, "ID " + contactId + " not found", Toast.LENGTH_SHORT).show();
+        	      break;
+        	  }
         	  contact.setName(data.getStringExtra(Items.ITEM_NAME));
         	  contact.setEmail(data.getStringExtra(Items.ITEM_EMAIL));
         	  contact.setBirthDate(data.getLongExtra(Items.ITEM_BIRTHDATE, 0));
@@ -112,5 +160,4 @@ public class ContactsActivity extends ActionBarActivity implements OnItemClickLi
         } 
       }
     }
-
 }
