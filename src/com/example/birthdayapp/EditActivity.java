@@ -1,14 +1,15 @@
 package com.example.birthdayapp;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 
 public class EditActivity extends ActionBarActivity {
@@ -19,10 +20,16 @@ public class EditActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit);
+		
+        long birthdateMillis = (Long) this.getIntent().getExtras().get("birthdate");
+        Date date = new Date();
+        date.setTime(birthdateMillis);
+        
 
+    DateFormat sdf = SimpleDateFormat.getDateInstance();
 		View view = findViewById(R.id.birthdate_button);
 		birthdateButton = (Button) view;
-		birthdateButton.setText("AAA");
+		birthdateButton.setText(sdf.format(date));
 	}
 
 	@Override

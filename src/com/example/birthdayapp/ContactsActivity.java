@@ -24,6 +24,7 @@ public class ContactsActivity extends ActionBarActivity {
         }
         
 		Intent intent = new Intent(this, EditActivity.class);
+		intent.putExtra("birthdate", 1398932672000L);
 		startActivity(intent);
         
     }
