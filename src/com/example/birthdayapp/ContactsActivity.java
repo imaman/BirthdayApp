@@ -1,5 +1,9 @@
 package com.example.birthdayapp;
 
+import java.util.List;
+
+import com.example.birthdayapp.ContactEntryContract.ContactEntry;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -7,18 +11,21 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
 
-public class ContactsActivity extends ActionBarActivity {
+public class ContactsActivity extends ActionBarActivity implements OnItemClickListener {
 
     private static final int EDIT_CODE = 1;
 
 	private ContactDbHelper contactDbHelper;
-	private Cursor contactsCursor;
-	private ListView contactsList;
+	private ListView contactsListView;
 	private ContactsAdapter contactsAdapter;
+	List<ContactEntry> contactsList;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +33,25 @@ public class ContactsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_contacts);
 		startEditing();
 		
-        contactsList = (ListView)findViewById(R.id.contactsListView);
+        contactsListView = (ListView)findViewById(R.id.contactsListView);
         contactDbHelper = new ContactDbHelper(this);
-//        addEntriesToDb();
-//        contactsCursor = contactDbHelper.getCursor();
-//        contactsAdapter = new ContactsAdapter(this, contactsCursor, 0);
-//        contactsList.setAdapter(contactsAdapter);
+        //addEntriesToDb();
+        contactsList = contactDbHelper.getContacts();
+        contactsAdapter = new ContactsAdapter(this, contactsList);
+        contactsListView.setAdapter(contactsAdapter);
+        contactsListView.setOnItemClickListener(this);
     }
 
-
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+            long id) {
+        Intent intent = new Intent(this, EditActivity.class);
+        ContactEntry currContact = contactsList.get(position);
+		intent.putExtra("birthdate", currContact.getBirthDate());
+        intent.putExtra("name", currContact.getName());
+		startActivityForResult(intent, EDIT_CODE);
+    }
+    
 	public void startEditing() {
 		Intent intent = new Intent(this, EditActivity.class);
 //		intent.putExtra("create", true);
@@ -64,9 +81,11 @@ public class ContactsActivity extends ActionBarActivity {
     }
     
     public void addEntriesToDb() {
-     	contactDbHelper.addEntry("Shai Sabag", 100000);
-     	contactDbHelper.addEntry("Itai Maman", 200000);
-    }
+     	contactDbHelper.addEntry(
+     			new ContactEntry(this, "Shai Sabag", 100000000, "shais@google.com", null));
+     	contactDbHelper.addEntry(
+     			new ContactEntry(this, "Itai Maman", 200000000, "imaman@google.com", null));
+     }
     
     public void initCursor() {
     	
