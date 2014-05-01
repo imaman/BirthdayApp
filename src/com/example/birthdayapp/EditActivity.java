@@ -4,26 +4,35 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class EditActivity extends ActionBarActivity {
 
     private Button birthdateButton;
     private DatePickerFragment datePicker;
+    private EditText nameEdit;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        nameEdit = (EditText) findViewById(R.id.edit_name);
+        
         datePicker = new DatePickerFragment();
-        long birthdateMillis = (Long) this.getIntent().getExtras()
-                .get("birthdate");
+        Bundle extras = this.getIntent().getExtras();
+        long birthdateMillis = (Long) extras.get("birthdate");
+        String name = (String) extras.get("name");
+        if (name != null)
+            nameEdit.setText(name);
         datePicker.setTime(birthdateMillis);
         
         birthdateChanged(birthdateMillis);
@@ -32,7 +41,7 @@ public class EditActivity extends ActionBarActivity {
     public void birthdateChanged(long birthdateMillis) {
         Date date = new Date();
         date.setTime(birthdateMillis);
-
+        
         DateFormat sdf = SimpleDateFormat.getDateInstance();
         View view = findViewById(R.id.birthdate_button);
         birthdateButton = (Button) view;
@@ -56,6 +65,17 @@ public class EditActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_done) {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("name", nameEdit.getText().toString());
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+        }
+        
+        if (id == R.id.action_cancel) {
+            this.finish();
+        }
+        
         return super.onOptionsItemSelected(item);
     }
 

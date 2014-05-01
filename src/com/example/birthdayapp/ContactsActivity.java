@@ -1,5 +1,6 @@
 package com.example.birthdayapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,8 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 public class ContactsActivity extends ActionBarActivity {
+
+    private static final int EDIT_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +34,13 @@ public class ContactsActivity extends ActionBarActivity {
 	public void startEditing() {
 		Intent intent = new Intent(this, EditActivity.class);
 		intent.putExtra("birthdate", 893579071000L);
-		startActivity(intent);
+        intent.putExtra("name", "Itay Maman");
+		startActivityForResult(intent, EDIT_CODE);
 	}
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.contacts, menu);
         return true;
     }
@@ -51,6 +54,7 @@ public class ContactsActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        
         return super.onOptionsItemSelected(item);
     }
 
@@ -68,6 +72,20 @@ public class ContactsActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
             return rootView;
         }
+    }
+    
+    @Override 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {     
+      super.onActivityResult(requestCode, resultCode, data); 
+      switch(requestCode) { 
+        case (EDIT_CODE) : { 
+          if (resultCode == Activity.RESULT_OK) { 
+              String name = data.getStringExtra("name");
+              Toast.makeText(this, "Got name: " + name, Toast.LENGTH_LONG).show();
+          } 
+          break; 
+        } 
+      }
     }
 
 }
