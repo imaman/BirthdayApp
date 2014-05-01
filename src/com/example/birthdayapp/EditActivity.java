@@ -20,13 +20,9 @@ public class EditActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit);
 
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
-		
-		birthdateButton = (Button) findViewById(R.id.birthdate_button);
-//		birthdateButton.setText("Apr. 14th, 1971");
+		View view = findViewById(R.id.birthdate_button);
+		birthdateButton = (Button) view;
+		birthdateButton.setText("AAA");
 	}
 
 	@Override
@@ -49,23 +45,6 @@ public class EditActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_edit, container,
-					false);
-			return rootView;
-		}
-	}
-	
 	public void showDatePickerDialog(View v) {
 	    DialogFragment newFragment = new DatePickerFragment();
 	    newFragment.show(getFragmentManager(), "datePicker");
