@@ -20,6 +20,7 @@ public class EditActivity extends ActionBarActivity {
     private DatePickerFragment datePicker;
     private EditText nameEdit;
     private long birthDateInMillis = 0;
+    private EditText emailEdit;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,18 +28,23 @@ public class EditActivity extends ActionBarActivity {
         setContentView(R.layout.activity_edit);
 
         nameEdit = (EditText) findViewById(R.id.edit_name);
+        emailEdit = (EditText) findViewById(R.id.edit_email);
         
         datePicker = new DatePickerFragment();
         Bundle extras = this.getIntent().getExtras();
         String name = "???";
+        String emailAddress = "???";
         long birthdateMillis = new Date().getTime();
         if (extras.getBoolean("create",  false)) {
             
         } else {
-            name = (String) extras.get("name");
-            if (name != null)
-                nameEdit.setText(name);
-            birthdateMillis = (Long) extras.get("birthdate");
+            name = extras.getString(Items.ITEM_NAME, name);
+            nameEdit.setText(name);
+            
+            emailAddress = extras.getString(Items.ITEM_EMAIL, emailAddress);
+            emailEdit.setText(emailAddress);
+            
+            birthdateMillis = (Long) extras.get(Items.ITEM_BIRTHDATE);
             datePicker.setTime(birthdateMillis);
         }
         
@@ -75,8 +81,9 @@ public class EditActivity extends ActionBarActivity {
         }
         if (id == R.id.action_done) {
             Intent resultIntent = new Intent();
-            resultIntent.putExtra("name", nameEdit.getText().toString());
-            resultIntent.putExtra("birthdate", birthDateInMillis);
+            resultIntent.putExtra(Items.ITEM_NAME, nameEdit.getText().toString());
+            resultIntent.putExtra(Items.ITEM_BIRTHDATE, birthDateInMillis);
+            resultIntent.putExtra(Items.ITEM_EMAIL, emailEdit.getText().toString());
             setResult(Activity.RESULT_OK, resultIntent);
             finish();
         }
