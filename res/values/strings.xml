@@ -4,5 +4,13 @@
     <string name="app_name">BirthdayApp</string>
     <string name="hello_world">Hello my world!</string>
     <string name="action_settings">Settings</string>
-
+    <string name="title_activity_edit">EditActivity</string>
+    <string name="edit_title">EDIT ME</string>
+    <string name="nothing">\?\?\?</string>
+    <string name="title_edit_name">Full name</string>
+    <string name="pick_date">Birthdate</string>
+    <string name="birthdate">Birthdate</string>
+    <string name="action_done">Done</string>
+    <string name="action_cancel">Cancel</string>
+    
 </resources>

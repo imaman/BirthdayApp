@@ -1,28 +1,31 @@
 package com.example.birthdayapp;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
-import android.os.Build;
+import android.widget.Toast;
+
 
 public class ContactsActivity extends ActionBarActivity {
+
+    private static final int EDIT_CODE = 1;
 
 	private ContactDbHelper contactDbHelper;
 	private Cursor contactsCursor;
 	private ListView contactsList;
 	private ContactsAdapter contactsAdapter;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
+		startEditing();
+		
         contactsList = (ListView)findViewById(R.id.contactsListView);
         contactDbHelper = new ContactDbHelper(this);
 //        addEntriesToDb();
@@ -32,10 +35,17 @@ public class ContactsActivity extends ActionBarActivity {
     }
 
 
+	public void startEditing() {
+		Intent intent = new Intent(this, EditActivity.class);
+//		intent.putExtra("create", true);
+		intent.putExtra("birthdate", 893579071000L);
+        intent.putExtra("name", "Itay Maman");
+		startActivityForResult(intent, EDIT_CODE);
+	}
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.contacts, menu);
         return true;
     }
@@ -49,6 +59,7 @@ public class ContactsActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        
         return super.onOptionsItemSelected(item);
     }
     
@@ -59,6 +70,21 @@ public class ContactsActivity extends ActionBarActivity {
     
     public void initCursor() {
     	
+    }
+    
+    @Override 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {     
+      super.onActivityResult(requestCode, resultCode, data); 
+      switch(requestCode) { 
+        case (EDIT_CODE) : { 
+          if (resultCode == Activity.RESULT_OK) { 
+              String name = data.getStringExtra("name");
+              long bd = data.getLongExtra("birthdate", 0);
+              Toast.makeText(this, "!!! " + name + ", born " + bd, Toast.LENGTH_LONG).show();
+          } 
+          break; 
+        } 
+      }
     }
 
 }
