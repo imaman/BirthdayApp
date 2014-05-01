@@ -1,5 +1,7 @@
 package com.example.birthdayapp;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -9,6 +11,10 @@ import android.widget.Toast;
 
 public class BirthdayNotificationService extends Service {
 
+    private NotificationManager mNM;
+    
+    private int NOTIFICATION = R.string.local_service_started;
+
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -16,6 +22,8 @@ public class BirthdayNotificationService extends Service {
     
     @Override
     public void onCreate() {
+        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        showNotification();
     
         Toast.makeText(this, "Congrats! MyService Created", Toast.LENGTH_LONG).show();
         Log.d(this.getClass().getName(), "onCreate");
@@ -29,49 +37,9 @@ public class BirthdayNotificationService extends Service {
     
     @Override
     public void onDestroy() {
+        mNM.cancel(NOTIFICATION);
         Toast.makeText(this, "MyService Stopped", Toast.LENGTH_LONG).show();
         Log.d(this.getClass().getName(), "onDestroy");
-    }
-}
-
-/*
-public class BirthdayNotificationService extends IntentService {
-
-    private NotificationManager mNM;
-    
-    private int NOTIFICATION = R.string.local_service_started;
-    @Override
-    public IBinder onBind(Intent arg0) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void onCreate() {
-        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        showNotification();
-    }
-
-    
-    
-    @Override
-    public void onDestroy() {
-        mNM.cancel(NOTIFICATION);
-    }
-    
-    public BirthdayNotificationService() {
-        super("BIRTHDAY_SERVICE");
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        // We want this service to continue running until it is explicitly
-        // stopped, so return sticky.
-        return START_STICKY;
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        showNotification();
     }
     
     private void showNotification() {
@@ -84,5 +52,11 @@ public class BirthdayNotificationService extends IntentService {
 
         mNM.notify(NOTIFICATION, noti);
     }
+    
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        // We want this service to continue running until it is explicitly
+        // stopped, so return sticky.
+        return START_STICKY;
+    }
 }
-*/
