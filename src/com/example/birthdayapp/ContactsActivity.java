@@ -24,22 +24,23 @@ public class ContactsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
-		startEditing();
+		startEditing("imaman@google.com", "Itay Maman", 893579071000L);
 		
         contactsList = (ListView)findViewById(R.id.contactsListView);
         contactDbHelper = new ContactDbHelper(this);
-//        addEntriesToDb();
+        addEntriesToDb();
 //        contactsCursor = contactDbHelper.getCursor();
 //        contactsAdapter = new ContactsAdapter(this, contactsCursor, 0);
 //        contactsList.setAdapter(contactsAdapter);
     }
 
 
-	public void startEditing() {
+	public void startEditing(String email, String name, long birthdateInMillis) {
 		Intent intent = new Intent(this, EditActivity.class);
 //		intent.putExtra("create", true);
-		intent.putExtra("birthdate", 893579071000L);
-        intent.putExtra("name", "Itay Maman");
+		intent.putExtra(Items.ITEM_BIRTHDATE, birthdateInMillis);
+        intent.putExtra(Items.ITEM_NAME, name); 
+        intent.putExtra(Items.ITEM_EMAIL, email);
 		startActivityForResult(intent, EDIT_CODE);
 	}
 
@@ -78,9 +79,11 @@ public class ContactsActivity extends ActionBarActivity {
       switch(requestCode) { 
         case (EDIT_CODE) : { 
           if (resultCode == Activity.RESULT_OK) { 
-              String name = data.getStringExtra("name");
-              long bd = data.getLongExtra("birthdate", 0);
-              Toast.makeText(this, "!!! " + name + ", born " + bd, Toast.LENGTH_LONG).show();
+              String name = data.getStringExtra(Items.ITEM_NAME);
+              long bd = data.getLongExtra(Items.ITEM_BIRTHDATE, 0);
+              String email = data.getStringExtra(Items.ITEM_EMAIL);
+              Toast.makeText(this, "Got: " + name + ", " + bd + ", " + email, Toast.LENGTH_LONG).show();
+            
           } 
           break; 
         } 

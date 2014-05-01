@@ -7,7 +7,8 @@
     <string name="title_activity_edit">EditActivity</string>
     <string name="edit_title">EDIT ME</string>
     <string name="nothing">\?\?\?</string>
-    <string name="title_edit_name">Full name</string>
+    <string name="title_edit_name">Full Name</string>
+    <string name="title_edit_email">E-Mail Address</string>   
     <string name="pick_date">Birthdate</string>
     <string name="birthdate">Birthdate</string>
     <string name="action_done">Done</string>
