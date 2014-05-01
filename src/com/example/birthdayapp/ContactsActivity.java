@@ -23,11 +23,15 @@ public class ContactsActivity extends ActionBarActivity {
                     .commit();
         }
         
+		startEditing();        
+    }
+
+
+	public void startEditing() {
 		Intent intent = new Intent(this, EditActivity.class);
 		intent.putExtra("birthdate", 1398932672000L);
 		startActivity(intent);
-        
-    }
+	}
 
 
     @Override
