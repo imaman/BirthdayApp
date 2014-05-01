@@ -3,26 +3,32 @@ package com.example.birthdayapp;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.os.Build;
 
 public class ContactsActivity extends ActionBarActivity {
 
+	private ContactDbHelper contactDbHelper;
+	private Cursor contactsCursor;
+	private ListView contactsList;
+	private ContactsAdapter contactsAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
+        contactsList = (ListView)findViewById(R.id.contactsListView);
+        contactDbHelper = new ContactDbHelper(this);
+//        addEntriesToDb();
+//        contactsCursor = contactDbHelper.getCursor();
+//        contactsAdapter = new ContactsAdapter(this, contactsCursor, 0);
+//        contactsList.setAdapter(contactsAdapter);
     }
 
 
@@ -45,21 +51,14 @@ public class ContactsActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
-            return rootView;
-        }
+    
+    public void addEntriesToDb() {
+     	contactDbHelper.addEntry("Shai Sabag", 100000);
+     	contactDbHelper.addEntry("Itai Maman", 200000);
+    }
+    
+    public void initCursor() {
+    	
     }
 
 }
