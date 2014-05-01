@@ -1,5 +1,6 @@
 package com.example.birthdayapp;
 
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -8,9 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 public class EditActivity extends ActionBarActivity {
 
+	private Button birthdateButton;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -20,6 +24,9 @@ public class EditActivity extends ActionBarActivity {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		birthdateButton = (Button) findViewById(R.id.birthdate_button);
+//		birthdateButton.setText("Apr. 14th, 1971");
 	}
 
 	@Override
@@ -58,5 +65,9 @@ public class EditActivity extends ActionBarActivity {
 			return rootView;
 		}
 	}
-
+	
+	public void showDatePickerDialog(View v) {
+	    DialogFragment newFragment = new DatePickerFragment();
+	    newFragment.show(getFragmentManager(), "datePicker");
+	}
 }

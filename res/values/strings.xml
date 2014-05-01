@@ -8,4 +8,6 @@
     <string name="edit_title">EDIT ME</string>
     <string name="nothing">\?\?\?</string>
     <string name="title_edit_name">Full name</string>
+    <string name="pick_date">Birthdate</string>
+    <string name="birthdate">Birthdate</string>
 </resources>
