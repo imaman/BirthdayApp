@@ -6,7 +6,6 @@ import com.example.birthdayapp.ContactEntryContract.ContactEntry;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -31,7 +30,6 @@ public class ContactsActivity extends ActionBarActivity implements OnItemClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
-		startEditing();
 		
         contactsListView = (ListView)findViewById(R.id.contactsListView);
         contactDbHelper = new ContactDbHelper(this);
@@ -47,19 +45,12 @@ public class ContactsActivity extends ActionBarActivity implements OnItemClickLi
             long id) {
         Intent intent = new Intent(this, EditActivity.class);
         ContactEntry currContact = contactsList.get(position);
-		intent.putExtra("birthdate", currContact.getBirthDate());
-        intent.putExtra("name", currContact.getName());
+		intent.putExtra(Items.ITEM_POSITION, position);
+		intent.putExtra(Items.ITEM_BIRTHDATE, currContact.getBirthDate());
+        intent.putExtra(Items.ITEM_NAME, currContact.getName());
+        intent.putExtra(Items.ITEM_EMAIL, currContact.getEmail());
 		startActivityForResult(intent, EDIT_CODE);
     }
-    
-	public void startEditing() {
-		Intent intent = new Intent(this, EditActivity.class);
-//		intent.putExtra("create", true);
-		intent.putExtra("birthdate", 893579071000L);
-        intent.putExtra("name", "Itay Maman");
-		startActivityForResult(intent, EDIT_CODE);
-	}
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,10 +87,13 @@ public class ContactsActivity extends ActionBarActivity implements OnItemClickLi
       super.onActivityResult(requestCode, resultCode, data); 
       switch(requestCode) { 
         case (EDIT_CODE) : { 
-          if (resultCode == Activity.RESULT_OK) { 
-              String name = data.getStringExtra("name");
-              long bd = data.getLongExtra("birthdate", 0);
-              Toast.makeText(this, "!!! " + name + ", born " + bd, Toast.LENGTH_LONG).show();
+          if (resultCode == Activity.RESULT_OK) {
+        	  long position = data.getLongExtra(Items.ITEM_POSITION, 0);
+        	  ContactEntry contact = contactsList.get((int) position);
+        	  contact.setName(data.getStringExtra(Items.ITEM_NAME));
+        	  contact.setEmail(data.getStringExtra(Items.ITEM_EMAIL));
+        	  contact.setBirthDate(data.getLongExtra(Items.ITEM_BIRTHDATE, 0));
+        	  contactsListView.invalidate();
           } 
           break; 
         } 
