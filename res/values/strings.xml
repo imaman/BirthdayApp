@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">BirthdayApp</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">Hello my world!</string>
     <string name="action_settings">Settings</string>
 
 </resources>
