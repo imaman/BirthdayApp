@@ -122,6 +122,14 @@ public class ContactsActivity extends ActionBarActivity {
             return true;
         }
         
+        if (id == R.id.action_add) {
+            ContactEntry contact = new ContactEntry(this, "", 0, "", null);
+            contactDbHelper.addEntry(contact);
+            contactsList.add(contact);
+            editContact(contact.getEntryId());
+            return true;
+        }
+        
         return super.onOptionsItemSelected(item);
     }
     

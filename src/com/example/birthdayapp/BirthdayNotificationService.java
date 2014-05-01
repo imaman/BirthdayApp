@@ -1,8 +1,6 @@
 package com.example.birthdayapp;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -111,10 +109,6 @@ public class BirthdayNotificationService extends Service {
                 }
             }
 
-/*            ArrayList<String> temp = new ArrayList<String>(set);
-            Collections.sort(temp);
-            return temp.toString();
-*/            
             if (candidate == null)
                 return null;
             
@@ -124,7 +118,7 @@ public class BirthdayNotificationService extends Service {
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(BirthdayNotificationService.this, result, Toast.LENGTH_LONG).show();
+//            Toast.makeText(BirthdayNotificationService.this, result, Toast.LENGTH_LONG).show();
             showNotification(result);
         }
     }
