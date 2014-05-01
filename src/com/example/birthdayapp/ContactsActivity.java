@@ -1,27 +1,33 @@
 package com.example.birthdayapp;
 
+import java.util.List;
+
+import com.example.birthdayapp.ContactEntryContract.ContactEntry;
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
 
-public class ContactsActivity extends ActionBarActivity {
+public class ContactsActivity extends ActionBarActivity implements OnItemClickListener {
 
     private static final int EDIT_CODE = 1;
 
 	private ContactDbHelper contactDbHelper;
-	private Cursor contactsCursor;
-	private ListView contactsList;
+	private ListView contactsListView;
 	private ContactsAdapter contactsAdapter;
+	List<ContactEntry> contactsList;
 	
 	
     @Override
@@ -36,26 +42,27 @@ public class ContactsActivity extends ActionBarActivity {
         
         
         setContentView(R.layout.activity_contacts);
-		startEditing("imaman@google.com", "Itay Maman", 893579071000L);
 		
-        contactsList = (ListView)findViewById(R.id.contactsListView);
+        contactsListView = (ListView)findViewById(R.id.contactsListView);
         contactDbHelper = new ContactDbHelper(this);
-        addEntriesToDb();
-//        contactsCursor = contactDbHelper.getCursor();
-//        contactsAdapter = new ContactsAdapter(this, contactsCursor, 0);
-//        contactsList.setAdapter(contactsAdapter);
+        //addEntriesToDb();
+        contactsList = contactDbHelper.getContacts();
+        contactsAdapter = new ContactsAdapter(this, contactsList);
+        contactsListView.setAdapter(contactsAdapter);
+        contactsListView.setOnItemClickListener(this);
     }
 
-
-	public void startEditing(String email, String name, long birthdateInMillis) {
-		Intent intent = new Intent(this, EditActivity.class);
-//		intent.putExtra("create", true);
-		intent.putExtra(Items.ITEM_BIRTHDATE, birthdateInMillis);
-        intent.putExtra(Items.ITEM_NAME, name); 
-        intent.putExtra(Items.ITEM_EMAIL, email);
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+            long id) {
+        Intent intent = new Intent(this, EditActivity.class);
+        ContactEntry currContact = contactsList.get(position);
+		intent.putExtra(Items.ITEM_POSITION, position);
+		intent.putExtra(Items.ITEM_BIRTHDATE, currContact.getBirthDate());
+        intent.putExtra(Items.ITEM_NAME, currContact.getName());
+        intent.putExtra(Items.ITEM_EMAIL, currContact.getEmail());
 		startActivityForResult(intent, EDIT_CODE);
-	}
-
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,9 +84,11 @@ public class ContactsActivity extends ActionBarActivity {
     }
     
     public void addEntriesToDb() {
-     	contactDbHelper.addEntry("Shai Sabag", 100000);
-     	contactDbHelper.addEntry("Itai Maman", 200000);
-    }
+     	contactDbHelper.addEntry(
+     			new ContactEntry(this, "Shai Sabag", 100000000, "shais@google.com", null));
+     	contactDbHelper.addEntry(
+     			new ContactEntry(this, "Itai Maman", 200000000, "imaman@google.com", null));
+     }
     
     public void initCursor() {
     	
@@ -90,12 +99,13 @@ public class ContactsActivity extends ActionBarActivity {
       super.onActivityResult(requestCode, resultCode, data); 
       switch(requestCode) { 
         case (EDIT_CODE) : { 
-          if (resultCode == Activity.RESULT_OK) { 
-              String name = data.getStringExtra(Items.ITEM_NAME);
-              long bd = data.getLongExtra(Items.ITEM_BIRTHDATE, 0);
-              String email = data.getStringExtra(Items.ITEM_EMAIL);
-              Toast.makeText(this, "Got: " + name + ", " + bd + ", " + email, Toast.LENGTH_LONG).show();
-            
+          if (resultCode == Activity.RESULT_OK) {
+        	  long position = data.getLongExtra(Items.ITEM_POSITION, 0);
+        	  ContactEntry contact = contactsList.get((int) position);
+        	  contact.setName(data.getStringExtra(Items.ITEM_NAME));
+        	  contact.setEmail(data.getStringExtra(Items.ITEM_EMAIL));
+        	  contact.setBirthDate(data.getLongExtra(Items.ITEM_BIRTHDATE, 0));
+        	  contactsListView.invalidate();
           } 
           break; 
         } 
