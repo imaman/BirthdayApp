@@ -56,6 +56,23 @@ public class ContactDbHelper extends SQLiteOpenHelper {
     	return db.insert(ContactEntry.TABLE_NAME, null, values);
     }
 
+    public long updateEntry(ContactEntry entry) {
+        SQLiteDatabase db = getWritableDatabase();
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(ContactEntry.COLUMN_NAME_ENTRY_ID, entry.getEntryId());
+        values.put(ContactEntry.COLUMN_NAME_NAME, entry.getName());
+        values.put(ContactEntry.COLUMN_NAME_BIRTH_DATE, entry.getBirthDate());
+        values.put(ContactEntry.COLUMN_NAME_EMAIL, entry.getEmail());
+        if (entry.getImageFileName() != null)
+        values.put(ContactEntry.COLUMN_NAME_IMAGE, entry.getImageFileName());
+
+        // Insert the new row, returning the primary key value of the new row
+        String selection = ContactEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
+        String[] selectionArgs = { String.valueOf(entry.getEntryId()) };
+        return db.update(ContactEntry.TABLE_NAME, values, selection, selectionArgs);
+    }
+    
 	public void deleteEntry(long entryId) {
 		SQLiteDatabase db = getWritableDatabase();
 		// Define 'where' part of query.

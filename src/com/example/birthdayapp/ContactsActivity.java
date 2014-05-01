@@ -45,7 +45,7 @@ public class ContactsActivity extends ActionBarActivity implements OnItemClickLi
 		
         contactsListView = (ListView)findViewById(R.id.contactsListView);
         contactDbHelper = new ContactDbHelper(this);
-        //addEntriesToDb();
+//        addEntriesToDb();
         contactsList = contactDbHelper.getContacts();
         contactsAdapter = new ContactsAdapter(this, contactsList);
         contactsListView.setAdapter(contactsAdapter);
@@ -105,7 +105,8 @@ public class ContactsActivity extends ActionBarActivity implements OnItemClickLi
         	  contact.setName(data.getStringExtra(Items.ITEM_NAME));
         	  contact.setEmail(data.getStringExtra(Items.ITEM_EMAIL));
         	  contact.setBirthDate(data.getLongExtra(Items.ITEM_BIRTHDATE, 0));
-        	  contactsListView.invalidate();
+        	  contactDbHelper.updateEntry(contact);
+        	  contactsAdapter.notifyDataSetChanged();
           } 
           break; 
         } 
