@@ -29,7 +29,7 @@ public class ContactsActivity extends ActionBarActivity {
 
 	public void startEditing() {
 		Intent intent = new Intent(this, EditActivity.class);
-		intent.putExtra("birthdate", 1398932672000L);
+		intent.putExtra("birthdate", 893579071000L);
 		startActivity(intent);
 	}
 

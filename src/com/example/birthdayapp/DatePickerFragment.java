@@ -11,11 +11,19 @@ import android.widget.DatePicker;
 
 public class DatePickerFragment extends DialogFragment
                             implements DatePickerDialog.OnDateSetListener {
+    
+    
+    private long timeInMillis = 0;
+
+    public void setTime(long millis) {
+        this.timeInMillis = millis;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(timeInMillis);
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
