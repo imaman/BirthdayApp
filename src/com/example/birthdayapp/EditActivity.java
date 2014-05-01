@@ -29,11 +29,17 @@ public class EditActivity extends ActionBarActivity {
         
         datePicker = new DatePickerFragment();
         Bundle extras = this.getIntent().getExtras();
-        long birthdateMillis = (Long) extras.get("birthdate");
-        String name = (String) extras.get("name");
-        if (name != null)
-            nameEdit.setText(name);
-        datePicker.setTime(birthdateMillis);
+        String name = "???";
+        long birthdateMillis = new Date().getTime();
+        if (extras.getBoolean("create",  false)) {
+            
+        } else {
+            name = (String) extras.get("name");
+            if (name != null)
+                nameEdit.setText(name);
+            birthdateMillis = (Long) extras.get("birthdate");
+            datePicker.setTime(birthdateMillis);
+        }
         
         birthdateChanged(birthdateMillis);
     }
