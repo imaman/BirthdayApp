@@ -13,5 +13,5 @@
     <string name="birthdate">Birthdate</string>
     <string name="action_done">Done</string>
     <string name="action_cancel">Cancel</string>
-    
+    <string name="local_service_started">birthday_app_started</string>
 </resources>

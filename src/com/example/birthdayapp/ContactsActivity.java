@@ -21,8 +21,11 @@ public class ContactsActivity extends ActionBarActivity {
 	private ContactsAdapter contactsAdapter;
 	
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {        
         super.onCreate(savedInstanceState);
+        
+        startService(new Intent(this, BirthdayNotificationService.class));
+        
         setContentView(R.layout.activity_contacts);
 		startEditing("imaman@google.com", "Itay Maman", 893579071000L);
 		

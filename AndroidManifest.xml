@@ -26,6 +26,9 @@
             android:name="com.example.birthdayapp.EditActivity"
             android:label="@string/title_activity_edit" >
         </activity>
-    </application>
+
+        <service android:enabled="true" android:name=".BirthdayNotificationService" />
+        
+      </application>
 
 </manifest>
