@@ -1,6 +1,9 @@
 package com.example.birthdayapp;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -20,11 +23,17 @@ public class ContactsActivity extends ActionBarActivity {
 	private ListView contactsList;
 	private ContactsAdapter contactsAdapter;
 	
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {        
         super.onCreate(savedInstanceState);
         
-        startService(new Intent(this, BirthdayNotificationService.class));
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent serviceIntent = new Intent(this, AlarmReciever.class);
+        PendingIntent alaramIntent = PendingIntent.getBroadcast(this, 0, serviceIntent, 0);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, 0, 1000 * 5, 
+                alaramIntent);
+        
         
         setContentView(R.layout.activity_contacts);
 		startEditing("imaman@google.com", "Itay Maman", 893579071000L);

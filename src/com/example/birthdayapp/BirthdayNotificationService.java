@@ -1,12 +1,15 @@
 package com.example.birthdayapp;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 
 public class BirthdayNotificationService extends Service {
@@ -23,30 +26,25 @@ public class BirthdayNotificationService extends Service {
     @Override
     public void onCreate() {
         mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        showNotification();
-    
-        Toast.makeText(this, "Congrats! MyService Created", Toast.LENGTH_LONG).show();
+        showNotification(null);
         Log.d(this.getClass().getName(), "onCreate");
     }
     
     @Override
     public void onStart(Intent intent, int startId) {
-        Toast.makeText(this, "My Service Started", Toast.LENGTH_LONG).show();
         Log.d(this.getClass().getName(), "onStart");  
     }
     
     @Override
     public void onDestroy() {
         mNM.cancel(NOTIFICATION);
-        Toast.makeText(this, "MyService Stopped", Toast.LENGTH_LONG).show();
         Log.d(this.getClass().getName(), "onDestroy");
     }
     
-    private void showNotification() {
-
+    private void showNotification(String text) {
         Notification noti = new Notification.Builder(this)
-            .setContentTitle("title:Happy birthday")
-            .setContentText("content")
+            .setContentTitle("Birthday")
+            .setContentText(text == null ? "No upcoming birthdays" : text)
             .setSmallIcon(R.drawable.ic_launcher)
             .build();
 
@@ -57,6 +55,31 @@ public class BirthdayNotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
+
+        new MyTask().execute();
+        
         return START_STICKY;
     }
+    
+    class MyTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            Date now = new Date();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(now);
+            int secs = cal.get(Calendar.SECOND) % 30;
+            if (secs < 15) {
+                return "YES";
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            showNotification(result);
+        }
+    }
 }
+
+
