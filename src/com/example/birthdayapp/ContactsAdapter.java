@@ -44,7 +44,7 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
   		birthDateView.setText(contacts.get(position).getBirthDateAsString());
   		TextView timeLeftView = (TextView) convertView.findViewById(R.id.timeLeftTextView);
   		long days = contacts.get(position).daysTillNextBirthday(now);
-  		timeLeftView.setText("In " + days + " days");
+  		timeLeftView.setText(days == 0 ? "Today" : ("In " + days + " day" + (days == 1 ? "" : "s")));
   		
   		convertView.setOnLongClickListener(new OnLongClickListener() {
             @Override

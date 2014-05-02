@@ -2,6 +2,7 @@ package com.example.birthdayapp;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Notification;
 import android.app.Notification.Builder;
@@ -86,21 +87,12 @@ public class BirthdayNotificationService extends Service {
             Calendar now = Calendar.getInstance();
             now.setTime(new Date());
             
-            long closest = Long.MAX_VALUE;
-            Contact candidate = null;
-            for (Contact curr : contactDbHelper.getContacts()) {
-                Calendar cal = curr.nextBirthday(now);                
-                long diff = cal.getTimeInMillis() - now.getTimeInMillis();
-                if (candidate == null || diff < closest) {
-                    closest = diff;
-                    candidate = curr;
-                }
-            }
-
-            if (candidate == null)
+            List<Contact> contacts = contactDbHelper.getContacts();
+            if (contacts.size() == 0)
                 return null;
             
-            long days = Math.round(closest / DAY_IN_MILLIS);
+            Contact candidate = contacts.get(0);
+            long days = candidate.daysTillNextBirthday(Calendar.getInstance());
             return "Upcoming birthday: " + candidate.getName() + " in " + days + " day" + ((days == 1) ? "" : "s");  
         }
 

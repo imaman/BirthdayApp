@@ -126,7 +126,9 @@ public class ContactDbHelper extends SQLiteOpenHelper {
 	        private final Calendar now = Calendar.getInstance();
             @Override
             public int compare(Contact lhs, Contact rhs) {
-                return lhs.nextBirthday(now).compareTo(rhs.nextBirthday(now));
+                long lhsDays = lhs.daysTillNextBirthday(now);
+                long rhsDays = rhs.daysTillNextBirthday(now);
+                return Long.compare(lhsDays, rhsDays);
             }
         });
 		
