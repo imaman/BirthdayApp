@@ -63,6 +63,20 @@ public class ContactsActivity extends ActionBarActivity {
         contactsList = contactDbHelper.listContactsByBirthdays();
         contactsAdapter = new ContactsAdapter(this, contactsList, this);
         contactsListView.setAdapter(contactsAdapter);
+        
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/x-vcard".equals(type)) {
+                handleSendVcard(intent); 
+            }
+        }
+    }
+
+    private void handleSendVcard(Intent intent) {
+        Toast.makeText(this,  "got vcard", Toast.LENGTH_SHORT).show();
     }
 
     public void editContact(long id) {
