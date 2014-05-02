@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
-import com.example.birthdayapp.ContactEntryContract.ContactEntry;
+import com.example.birthdayapp.ContactEntryContract.Contact;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -20,7 +20,7 @@ public final class ContactEntryContract {
     public ContactEntryContract() {}
 
     /* Inner class that defines the table contents */
-    public static class ContactEntry {
+    public static class Contact {
         public static final String TABLE_NAME = "contacts";
         public static final String COLUMN_NAME_ENTRY_ID = "entryid";
         public static final String COLUMN_NAME_NAME = "name";
@@ -33,7 +33,7 @@ public final class ContactEntryContract {
         private long birthDate;
         private String imageFileName;
         
-        public ContactEntry(Cursor cursor) {
+        public Contact(Cursor cursor) {
         	this.entryId = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_NAME_ENTRY_ID));
         	this.name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_NAME));
         	this.birthDate = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_NAME_BIRTH_DATE));
@@ -41,7 +41,7 @@ public final class ContactEntryContract {
         	this.imageFileName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_IMAGE));      	
         }
         
-        public ContactEntry(Context context, String name, long birthDate, String email, 
+        public Contact(Context context, String name, long birthDate, String email, 
         		Bitmap image) {
         	this.entryId = System.currentTimeMillis();
         	this.name = name;

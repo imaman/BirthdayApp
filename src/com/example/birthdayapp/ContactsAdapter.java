@@ -13,16 +13,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.birthdayapp.ContactEntryContract.ContactEntry;
+import com.example.birthdayapp.ContactEntryContract.Contact;
 
-public class ContactsAdapter extends ArrayAdapter<ContactEntry> {
-	List<ContactEntry> contacts;
+public class ContactsAdapter extends ArrayAdapter<Contact> {
+	List<Contact> contacts;
     private final ContactsActivity contactsActivity;
-    private final Map<Long, ContactEntry> contactById = new HashMap<Long, ContactEntry>();
-    public ContactsAdapter(Context context, List<ContactEntry> contacts, ContactsActivity contactsActivity) {
+    private final Map<Long, Contact> contactById = new HashMap<Long, Contact>();
+    public ContactsAdapter(Context context, List<Contact> contacts, ContactsActivity contactsActivity) {
 	  super(context, R.layout.contact_entry, contacts);
 	  
-	  for (ContactEntry curr : contacts) {
+	  for (Contact curr : contacts) {
 	      contactById.put(curr.getEntryId(), curr);
 	  }
 	  

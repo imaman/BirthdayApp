@@ -15,7 +15,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.example.birthdayapp.ContactEntryContract.ContactEntry;
+import com.example.birthdayapp.ContactEntryContract.Contact;
 
 
 public class BirthdayNotificationService extends Service {
@@ -89,8 +89,8 @@ public class BirthdayNotificationService extends Service {
             now.setTime(new Date());
             
             long closest = Long.MAX_VALUE;
-            ContactEntry candidate = null;
-            for (ContactEntry curr : contactDbHelper.getContacts()) {
+            Contact candidate = null;
+            for (Contact curr : contactDbHelper.getContacts()) {
                 Calendar cal = curr.nextBirthday(now);                
                 long diff = cal.getTimeInMillis() - now.getTimeInMillis();
                 if (candidate == null || diff < closest) {

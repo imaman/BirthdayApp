@@ -19,7 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.birthdayapp.ContactEntryContract.ContactEntry;
+import com.example.birthdayapp.ContactEntryContract.Contact;
 
 
 public class ContactsActivity extends ActionBarActivity {
@@ -29,7 +29,7 @@ public class ContactsActivity extends ActionBarActivity {
 	private ContactDbHelper contactDbHelper;
 	private ListView contactsListView;
 	private ContactsAdapter contactsAdapter;
-	List<ContactEntry> contactsList;
+	List<Contact> contactsList;
 	
 	
     @Override
@@ -66,7 +66,7 @@ public class ContactsActivity extends ActionBarActivity {
 
     public void editContact(long id) {
         Intent intent = new Intent(this, EditActivity.class);
-        ContactEntry contact = contactFromId(id);
+        Contact contact = contactFromId(id);
         
         intent.putExtra(Items.CONTACT_ID, contact.getEntryId());
         intent.putExtra(Items.ITEM_BIRTHDATE, contact.getBirthDate());
@@ -75,8 +75,8 @@ public class ContactsActivity extends ActionBarActivity {
 		startActivityForResult(intent, EDIT_CODE);
     }
         
-    private ContactEntry contactFromId(long id) {
-        for (ContactEntry curr : contactsList) {
+    private Contact contactFromId(long id) {
+        for (Contact curr : contactsList) {
             if (curr.getEntryId() == id)
                 return curr;
         }
@@ -84,7 +84,7 @@ public class ContactsActivity extends ActionBarActivity {
     }
     
     public boolean deleteContact(final long id_) {
-        final ContactEntry contactToDelete = contactFromId(id_);
+        final Contact contactToDelete = contactFromId(id_);
         if (contactToDelete == null)
             return true;
         
@@ -140,7 +140,7 @@ public class ContactsActivity extends ActionBarActivity {
     }
 
     public void addContact() {
-        ContactEntry contact = new ContactEntry(this, "", 0, "", null);
+        Contact contact = new Contact(this, "", 0, "", null);
         contactDbHelper.addEntry(contact);
         contactsList.add(contact);
         editContact(contact.getEntryId());
@@ -148,9 +148,9 @@ public class ContactsActivity extends ActionBarActivity {
     
     public void addEntriesToDb() {
      	contactDbHelper.addEntry(
-     			new ContactEntry(this, "Shai Sabag", 100000000, "shais@google.com", null));
+     			new Contact(this, "Shai Sabag", 100000000, "shais@google.com", null));
      	contactDbHelper.addEntry(
-     			new ContactEntry(this, "Itai Maman", 200000000, "imaman@google.com", null));
+     			new Contact(this, "Itai Maman", 200000000, "imaman@google.com", null));
      }
     
     public void initCursor() {
@@ -166,7 +166,7 @@ public class ContactsActivity extends ActionBarActivity {
         	  long contactId = data.getLongExtra(Items.CONTACT_ID, -1);
         	  if (contactId < 0)
         	      break;
-        	  ContactEntry contact = contactFromId(contactId);
+        	  Contact contact = contactFromId(contactId);
         	  if (contact == null) {
         	      Toast.makeText(this, "ID " + contactId + " not found", Toast.LENGTH_SHORT).show();
         	      break;
