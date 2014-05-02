@@ -136,11 +136,6 @@ public class ContactsActivity extends ActionBarActivity {
             return true;
         }
         
-        if (id == R.id.action_add) {
-            addContact();
-            return true;
-        }
-        
         return super.onOptionsItemSelected(item);
     }
 
