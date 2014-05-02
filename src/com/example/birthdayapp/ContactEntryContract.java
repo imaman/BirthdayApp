@@ -2,12 +2,9 @@ package com.example.birthdayapp;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Set;
-
-import com.example.birthdayapp.ContactEntryContract.Contact;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -63,7 +60,7 @@ public final class ContactEntryContract {
         }
         
         public String getBirthDateAsString() {
-        	return new SimpleDateFormat("dd/MM/yyyy").format(new Date(birthDate));
+        	return DateFormat.getDateInstance().format(new Date(birthDate));
         }
         
         public long getBirthDate() {

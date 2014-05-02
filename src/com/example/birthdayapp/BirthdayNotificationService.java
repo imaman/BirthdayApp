@@ -2,8 +2,6 @@ package com.example.birthdayapp;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import android.app.Notification;
 import android.app.Notification.Builder;
