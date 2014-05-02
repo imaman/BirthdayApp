@@ -113,7 +113,7 @@ public class ContactDbHelper extends SQLiteOpenHelper {
     	    sortOrder                                 // The sort order
     	    );
 	}
-	public List<Contact> getContacts() {
+	public List<Contact> listContactsByBirthdays() {
 		Cursor cursor = getCursor();
 		List<Contact> contactsList = new ArrayList<Contact>(cursor.getCount());
 		if (!cursor.moveToFirst())

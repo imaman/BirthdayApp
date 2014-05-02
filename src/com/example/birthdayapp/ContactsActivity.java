@@ -59,7 +59,7 @@ public class ContactsActivity extends ActionBarActivity {
         contactsListView = (ListView)findViewById(R.id.contactsListView);
         contactDbHelper = new ContactDbHelper(this);
         //addEntriesToDb();
-        contactsList = contactDbHelper.getContacts();
+        contactsList = contactDbHelper.listContactsByBirthdays();
         contactsAdapter = new ContactsAdapter(this, contactsList, this);
         contactsListView.setAdapter(contactsAdapter);
     }

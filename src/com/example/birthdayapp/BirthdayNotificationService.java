@@ -87,7 +87,7 @@ public class BirthdayNotificationService extends Service {
             Calendar now = Calendar.getInstance();
             now.setTime(new Date());
             
-            List<Contact> contacts = contactDbHelper.getContacts();
+            List<Contact> contacts = contactDbHelper.listContactsByBirthdays();
             if (contacts.size() == 0)
                 return null;
             
