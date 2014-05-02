@@ -1,7 +1,6 @@
 package com.example.birthdayapp;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import android.app.Notification;
@@ -85,20 +84,16 @@ public class BirthdayNotificationService extends Service {
         @Override
         protected String doInBackground(Long... params) {
             Calendar now = Calendar.getInstance();
-            now.setTime(new Date());
-            
             List<Contact> contacts = contactDbHelper.listContactsByBirthdays();
             if (contacts.size() == 0)
                 return null;
             
-            Contact candidate = contacts.get(0);
-            long days = candidate.daysTillNextBirthday(Calendar.getInstance());
-            return "Upcoming birthday: " + candidate.getName() + " in " + days + " day" + ((days == 1) ? "" : "s");  
+            Contact contact = contacts.get(0);
+            return "Upcoming birthday: " + contact.getName() + " " + Ui.daysLeftMessage(now, contact);  
         }
 
         @Override
         protected void onPostExecute(String result) {
-//            Toast.makeText(BirthdayNotificationService.this, result, Toast.LENGTH_LONG).show();
             showNotification(result);
         }
     }

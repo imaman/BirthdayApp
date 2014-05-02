@@ -40,11 +40,11 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
     	// Populate
     	TextView nameView = (TextView) convertView.findViewById(R.id.nameTextView);
   		TextView birthDateView = (TextView) convertView.findViewById(R.id.dateTextView);
-  		nameView.setText(contacts.get(position).getName());
-  		birthDateView.setText(contacts.get(position).getBirthDateAsString());
+  		Contact contact = contacts.get(position);
+      nameView.setText(contact.getName());
+  		birthDateView.setText(contact.getBirthDateAsString());
   		TextView timeLeftView = (TextView) convertView.findViewById(R.id.timeLeftTextView);
-  		long days = contacts.get(position).daysTillNextBirthday(now);
-  		timeLeftView.setText(days == 0 ? "Today" : ("In " + days + " day" + (days == 1 ? "" : "s")));
+  		timeLeftView.setText(Ui.daysLeftMessage(now, contact));
   		
   		convertView.setOnLongClickListener(new OnLongClickListener() {
             @Override
