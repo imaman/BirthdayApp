@@ -2,6 +2,7 @@ package com.example.birthdayapp;
 
 import java.util.List;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,6 +35,17 @@ public class ContactsActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {        
         super.onCreate(savedInstanceState);
+        
+        ActionBar actionBar = getActionBar();
+        actionBar.setCustomView(R.layout.activity_contacts_custom_action_bar);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.getCustomView().findViewById(R.id.action_add_contact).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addContact();
+            }
+        });
         
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent serviceIntent = new Intent(this, AlarmReciever.class);
@@ -123,14 +137,18 @@ public class ContactsActivity extends ActionBarActivity {
         }
         
         if (id == R.id.action_add) {
-            ContactEntry contact = new ContactEntry(this, "", 0, "", null);
-            contactDbHelper.addEntry(contact);
-            contactsList.add(contact);
-            editContact(contact.getEntryId());
+            addContact();
             return true;
         }
         
         return super.onOptionsItemSelected(item);
+    }
+
+    public void addContact() {
+        ContactEntry contact = new ContactEntry(this, "", 0, "", null);
+        contactDbHelper.addEntry(contact);
+        contactsList.add(contact);
+        editContact(contact.getEntryId());
     }
     
     public void addEntriesToDb() {

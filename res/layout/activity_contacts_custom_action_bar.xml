@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contacts_action_bar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:divider="?android:attr/dividerVertical"
+    android:dividerPadding="12dip"
+    android:showDividers="middle">
+
+    <!-- id must match corresponding menu item id -->
+    <LinearLayout
+        android:id="@+id/action_add_contact"
+       	style="@style/EditContacActionBarButton">
+       	
+        <TextView
+            android:text="@string/add_contact_label" 
+			style="@style/EditContacActionBarText" />
+        
+    </LinearLayout>
+
+</LinearLayout>
