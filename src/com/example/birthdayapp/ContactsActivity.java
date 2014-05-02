@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import a_vcard.android.syncml.pim.PropertyNode;
 import a_vcard.android.syncml.pim.VDataBuilder;
@@ -81,56 +82,56 @@ public class ContactsActivity extends ActionBarActivity {
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if ("text/x-vcard".equals(type)) {
-                Log.i("TAG", "type=" + type);
-                new AsyncTask<Uri, Integer, Void>() {
+                new AsyncTask<Uri, Integer, Contact>() {
                     @Override
-                    protected Void doInBackground(Uri... params) {
+                    protected Contact doInBackground(Uri... params) {
                         try {
-                            handleSendVcard(params[0]);
+                            return handleSendVcard(params[0]);
                         } catch (Exception e) {
                             Log.e(getClass().getName(), "Processing of vcard failed",  e);
                         }
                         return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Contact newContact) {
+                        if (newContact == null)
+                            return;
+                        contactsList.add(newContact);
+                        editContact(newContact.getEntryId());
                     }
                 }.execute((Uri) intent.getExtras().get(Intent.EXTRA_STREAM));
             }
         }
     }
 
-    private void handleSendVcard(Uri uri) throws Exception {
-        Log.i("TAG", "uri=" + uri);
-        ContentResolver cr = getContentResolver();
-        InputStream stream = cr.openInputStream(uri);
-
-        StringBuilder fileContent = new StringBuilder();
-        int ch;
-        while( (ch = stream.read()) != -1) {
-              fileContent.append((char)ch);
+    private Contact handleSendVcard(Uri uri) throws Exception {
+        InputStream in = getContentResolver().openInputStream(uri);
+        StringBuilder buffer = new StringBuilder();
+        
+        for (Scanner scanner = new Scanner(in); scanner.hasNext(); ) {
+            buffer.append(scanner.nextLine()).append("\n");
         }
         
-        Log.i("TAG", "file size=" + fileContent.length());
-
-        VCardParser parser_ = new VCardParser();
         VDataBuilder builder = new VDataBuilder();
 
-        //parse the string
-        boolean parsed = parser_.parse(fileContent.toString(), "UTF-8", builder);
-        Log.i("TAG", "parsed? " + parsed);
+        boolean parsed = new VCardParser().parse(buffer.toString(), "UTF-8", 
+                builder);
         if (!parsed) {
             throw new VCardException("Could not parse vCard");
         }
 
-        Log.i("TAG", "#vNodes=" + builder.vNodeList.size());
-        for (VNode contact : builder.vNodeList) {
+        for (VNode node : builder.vNodeList) {
             Map<String, String> map = new HashMap<String, String>();
-            Log.i("TAG", "#propList=" + contact.propList.size());
-            for (PropertyNode curr : contact.propList) {
+            for (PropertyNode curr : node.propList) {
                 map.put(curr.propName,  curr.propValue);
             }
-            Log.i("TAG", "name=" + map.get("FN"));
-            Log.i("TAG", "keys=" + map.keySet());
-        }        
-        Log.i("TAG", "--done--");
+            Contact newContact = new Contact(this, map.get("FN"), 0, map.get("EMAIL"), null);
+            contactDbHelper.addEntry(newContact);
+            return newContact;
+        }
+        
+        return null;
     }
 
     public void editContact(long id) {
