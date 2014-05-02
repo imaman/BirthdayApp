@@ -58,7 +58,7 @@ public class ContactsActivity extends ActionBarActivity {
 		
         contactsListView = (ListView)findViewById(R.id.contactsListView);
         contactDbHelper = new ContactDbHelper(this);
-        //addEntriesToDb();
+        // TODO: DB Access needs to be taken off the UI thread (via AsyncTask) 
         contactsList = contactDbHelper.listContactsByBirthdays();
         contactsAdapter = new ContactsAdapter(this, contactsList, this);
         contactsListView.setAdapter(contactsAdapter);
@@ -144,17 +144,6 @@ public class ContactsActivity extends ActionBarActivity {
         contactDbHelper.addEntry(contact);
         contactsList.add(contact);
         editContact(contact.getEntryId());
-    }
-    
-    public void addEntriesToDb() {
-     	contactDbHelper.addEntry(
-     			new Contact(this, "Shai Sabag", 100000000, "shais@google.com", null));
-     	contactDbHelper.addEntry(
-     			new Contact(this, "Itai Maman", 200000000, "imaman@google.com", null));
-     }
-    
-    public void initCursor() {
-    	
     }
     
     @Override 
