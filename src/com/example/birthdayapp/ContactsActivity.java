@@ -1,5 +1,6 @@
 package com.example.birthdayapp;
 
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.ActionBar;
@@ -173,6 +174,7 @@ public class ContactsActivity extends ActionBarActivity {
 
     void dataChanged() {
         contactsAdapter.notifyDataSetChanged();
+        contactsAdapter.sort(new ContactComparator());
         AlarmReciever.startNotificationService(this);
     }
 }

@@ -1,9 +1,7 @@
 package com.example.birthdayapp;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import com.example.birthdayapp.ContactEntryContract.Contact;
@@ -122,15 +120,7 @@ public class ContactDbHelper extends SQLiteOpenHelper {
 			contactsList.add(new Contact(cursor));
 		} while (cursor.moveToNext());
 		
-		Collections.sort(contactsList, new Comparator<Contact>() {
-	        private final Calendar now = Calendar.getInstance();
-            @Override
-            public int compare(Contact lhs, Contact rhs) {
-                long lhsDays = lhs.daysTillNextBirthday(now);
-                long rhsDays = rhs.daysTillNextBirthday(now);
-                return Long.compare(lhsDays, rhsDays);
-            }
-        });
+		Collections.sort(contactsList, new ContactComparator());
 		
 		return contactsList;
 	}

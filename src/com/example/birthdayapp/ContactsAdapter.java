@@ -22,7 +22,7 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
 	  
 	  this.contacts = contacts;
 	  this.contactsActivity = contactsActivity;
-    }
+    }    
     
     @Override
     public long getItemId(int position) {
