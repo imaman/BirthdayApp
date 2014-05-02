@@ -85,36 +85,17 @@ public class BirthdayNotificationService extends Service {
 
         @Override
         protected String doInBackground(Long... params) {
-            long thresholdInMillis = params[0];
-            
             Calendar now = Calendar.getInstance();
             now.setTime(new Date());
             
             long closest = Long.MAX_VALUE;
             ContactEntry candidate = null;
-            Calendar nextBirthday = null;
-            String s = "";
-            Set<String> set = new HashSet<String>();
-            
             for (ContactEntry curr : contactDbHelper.getContacts()) {
-                long dob = curr.getBirthDate();
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(dob);
-                cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
-                
-                set.add(cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH));
-                
+                Calendar cal = curr.nextBirthday(now);                
                 long diff = cal.getTimeInMillis() - now.getTimeInMillis();
-                if (diff < 0) {
-                    cal.set(Calendar.YEAR, now.get(Calendar.YEAR) + 1);
-                    diff = cal.getTimeInMillis() - now.getTimeInMillis();
-                }
-                s += cal.getTime() + ", ";
-                
                 if (candidate == null || diff < closest) {
                     closest = diff;
                     candidate = curr;
-                    nextBirthday = cal;
                 }
             }
 

@@ -3,7 +3,11 @@ package com.example.birthdayapp;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
+
+import com.example.birthdayapp.ContactEntryContract.ContactEntry;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -105,6 +109,18 @@ public final class ContactEntryContract {
         	if (imageFileName != null && imageFileName.length() > 0)
         		return BitmapFactory.decodeFile(imageFileName);
         	return null;
+        }
+
+        Calendar nextBirthday(Calendar now) {
+            long dob = getBirthDate();
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(dob);
+            cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
+            
+            if (cal.before(now)) {
+                cal.set(Calendar.YEAR, now.get(Calendar.YEAR) + 1);
+            }
+            return cal;
         }
      }
 }
