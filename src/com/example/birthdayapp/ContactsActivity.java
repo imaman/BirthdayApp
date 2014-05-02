@@ -89,7 +89,7 @@ public class ContactsActivity extends ActionBarActivity {
                 // TODO(imaman): this should be an async task.
                 contactDbHelper.deleteEntry(contactToDelete.getEntryId());
                 contactsList.remove(contactToDelete);
-                contactsAdapter.notifyDataSetChanged();
+                dataChanged();
             }
         });
  
@@ -162,10 +162,15 @@ public class ContactsActivity extends ActionBarActivity {
         	  contact.setEmail(data.getStringExtra(Items.ITEM_EMAIL));
         	  contact.setBirthDate(data.getLongExtra(Items.ITEM_BIRTHDATE, 0));
         	  contactDbHelper.updateEntry(contact);
-        	  contactsAdapter.notifyDataSetChanged();
+        	  dataChanged();
           } 
           break; 
         } 
       }
+    }
+
+    void dataChanged() {
+        contactsAdapter.notifyDataSetChanged();
+        AlarmReciever.startNotificationService(this);
     }
 }
