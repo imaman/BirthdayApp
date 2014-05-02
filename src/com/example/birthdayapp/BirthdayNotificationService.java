@@ -6,13 +6,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import android.app.Notification;
+import android.app.Notification.Builder;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.birthdayapp.ContactEntryContract.ContactEntry;
 
@@ -50,13 +51,21 @@ public class BirthdayNotificationService extends Service {
     }
     
     private void showNotification(String text) {
-        Notification noti = new Notification.Builder(this)
+        Builder builder = new Notification.Builder(this)
             .setContentTitle("Birthday")
             .setContentText(text == null ? "No upcoming birthdays" : text)
-            .setSmallIcon(R.drawable.ic_launcher)
-            .build();
-
-        mNM.notify(NOTIFICATION, noti);
+            .setSmallIcon(R.drawable.ic_launcher);
+        
+        Intent resultIntent = new Intent(this, ContactsActivity.class);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(
+                this,
+                0,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+        
+        mNM.notify(NOTIFICATION, builder.build());
     }
     
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
