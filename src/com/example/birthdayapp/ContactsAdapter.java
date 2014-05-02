@@ -1,8 +1,7 @@
 package com.example.birthdayapp;
 
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -18,13 +17,8 @@ import com.example.birthdayapp.ContactEntryContract.Contact;
 public class ContactsAdapter extends ArrayAdapter<Contact> {
 	List<Contact> contacts;
     private final ContactsActivity contactsActivity;
-    private final Map<Long, Contact> contactById = new HashMap<Long, Contact>();
     public ContactsAdapter(Context context, List<Contact> contacts, ContactsActivity contactsActivity) {
 	  super(context, R.layout.contact_entry, contacts);
-	  
-	  for (Contact curr : contacts) {
-	      contactById.put(curr.getEntryId(), curr);
-	  }
 	  
 	  this.contacts = contacts;
 	  this.contactsActivity = contactsActivity;
@@ -36,19 +30,22 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
     }
 
     @Override public View getView (final int position, View convertView, ViewGroup parent) {
+        Calendar now = Calendar.getInstance();
     	if (convertView == null) {
     		LayoutInflater inflater = (LayoutInflater) getContext()
     				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.contact_entry, null);
         }
 
-  // Populate
+    	// Populate
     	TextView nameView = (TextView) convertView.findViewById(R.id.nameTextView);
   		TextView birthDateView = (TextView) convertView.findViewById(R.id.dateTextView);
   		nameView.setText(contacts.get(position).getName());
   		birthDateView.setText(contacts.get(position).getBirthDateAsString());
+  		TextView timeLeftView = (TextView) convertView.findViewById(R.id.timeLeftTextView);
+  		long days = contacts.get(position).daysTillNextBirthday(now);
+  		timeLeftView.setText("In " + days + " days");
   		
-/*  		convertView.setLongClickable(true); */
   		convertView.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

@@ -113,11 +113,24 @@ public final class ContactEntryContract {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(dob);
             cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
-            
             if (cal.before(now)) {
-                cal.set(Calendar.YEAR, now.get(Calendar.YEAR) + 1);
+                cal.add(Calendar.YEAR, 1);
             }
             return cal;
+        }
+
+        public long daysTillNextBirthday(Calendar now) {
+            Calendar nextBirthday = nextBirthday(now);
+            long result = daysDiff(now, nextBirthday);
+            if (result < 0) {
+                result = nextBirthday.getTimeInMillis() - now.getTimeInMillis();
+                result = Math.round(result / (1000 * 60 * 60 * 24));
+            }
+            return result;
+        }
+
+        int daysDiff(Calendar begin, Calendar end) {
+            return end.get(Calendar.DAY_OF_YEAR) - begin.get(Calendar.DAY_OF_YEAR);
         }
      }
 }
