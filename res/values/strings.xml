@@ -15,4 +15,6 @@
     <string name="action_done">Done</string>
     <string name="action_cancel">Cancel</string>
     <string name="local_service_started">birthday_app_started</string>
+    <string name="discard_label">Cancel</string>
+    <string name="save_label">Save</string>
 </resources>

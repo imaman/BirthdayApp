@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_action_bar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:divider="?android:attr/dividerVertical"
+    android:dividerPadding="12dip"
+    android:showDividers="middle">
+
+    <!-- id must match corresponding menu item id -->
+    <LinearLayout
+        android:id="@+id/action_cancel"
+       	style="@style/EditContacActionBarButton">
+       	
+        <TextView
+            android:text="@string/discard_label" 
+			style="@style/EditContacActionBarText" />
+        
+    </LinearLayout>
+
+    <!-- id must match corresponding menu item id -->
+    <LinearLayout
+        android:id="@+id/action_done" 
+       	style="@style/EditContacActionBarButton">
+        
+        <TextView
+            android:text="@string/save_label" 
+			style="@style/EditContacActionBarText" />
+        
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -28,6 +30,29 @@ public class EditActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        
+        ActionBar actionBar = getActionBar();
+        actionBar.setCustomView(R.layout.activity_edit_custom_action_bar);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.getCustomView().findViewById(R.id.action_cancel).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        actionBar.getCustomView().findViewById(R.id.action_done).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(Items.CONTACT_ID, contactId);
+                resultIntent.putExtra(Items.ITEM_NAME, nameEdit.getText().toString());
+                resultIntent.putExtra(Items.ITEM_BIRTHDATE, birthDateInMillis);
+                resultIntent.putExtra(Items.ITEM_EMAIL, emailEdit.getText().toString());
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+            }
+        });
         nameEdit = (EditText) findViewById(R.id.edit_name);
         emailEdit = (EditText) findViewById(R.id.edit_email);
         
@@ -67,36 +92,9 @@ public class EditActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.edit, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.action_done) {
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra(Items.CONTACT_ID, contactId);
-            resultIntent.putExtra(Items.ITEM_NAME, nameEdit.getText().toString());
-            resultIntent.putExtra(Items.ITEM_BIRTHDATE, birthDateInMillis);
-            resultIntent.putExtra(Items.ITEM_EMAIL, emailEdit.getText().toString());
-            setResult(Activity.RESULT_OK, resultIntent);
-            finish();
-        }
-        
-        if (id == R.id.action_cancel) {
-            this.finish();
-        }
-        
-        return super.onOptionsItemSelected(item);
     }
 
     public void showDatePickerDialog(View v) {
