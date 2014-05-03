@@ -39,12 +39,21 @@ public final class ContactEntryContract {
         }
         
         public Contact(Context context, String name, long birthDate, String email, 
-        		Bitmap image) {
-        	this.entryId = System.currentTimeMillis();
+                Bitmap image) {
+            this(context, null, name, birthDate, email, image);
+        }
+        
+        public Contact(Context context, Long id, String name, long birthDate, String email, 
+        		Bitmap image) {            
+        	this.entryId = id == null ? System.currentTimeMillis() : id;
         	this.name = name;
         	this.birthDate = birthDate;
         	this.email = email;
         	setImage(context, image);
+        }
+        
+        public String toString() {
+            return this.name + " #" + this.entryId;
         }
         
         public long getEntryId() {

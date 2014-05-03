@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.example.birthdayapp.ContactEntryContract.Contact;
 
 public class ContactsAdapter extends ArrayAdapter<Contact> {
-	List<Contact> contacts;
+	private final List<Contact> contacts;
     private final ContactsActivity contactsActivity;
     public ContactsAdapter(Context context, List<Contact> contacts, ContactsActivity contactsActivity) {
 	  super(context, R.layout.contact_entry, contacts);
@@ -55,7 +55,7 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
   		convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactsActivity.editContact(getItemId(position));
+                contactsActivity.editContact(contacts.get(position), true);
             }
         });
   		return convertView;
