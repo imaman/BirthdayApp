@@ -1,5 +1,7 @@
 package com.example.birthdayapp;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -16,9 +18,12 @@ import a_vcard.android.syncml.pim.vcard.VCardParser;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.birthdayapp.ContactEntryContract.Contact;
 
@@ -38,6 +44,8 @@ public class EditActivity extends ActionBarActivity {
     private EditText emailEdit;
     private Long contactId = null;
     private boolean update = false;
+    private ImageView photo = null;
+    private Bitmap bitmap = null;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +79,8 @@ public class EditActivity extends ActionBarActivity {
         emailEdit = (EditText) findViewById(R.id.edit_email);        
         datePicker = new DatePickerFragment();
         contactId = null;
-        
-        
-                
+        photo = (ImageView) findViewById(R.id.contact_photo); 
+                       
         Intent intent = getIntent();
         boolean isShareIntent = Intent.ACTION_SEND.equals(intent.getAction()) && 
                 "text/x-vcard".equals(intent.getType());
@@ -88,7 +95,7 @@ public class EditActivity extends ActionBarActivity {
             @Override
             protected Contact doInBackground(Uri... params) {
                 try {
-                    return handleSendVcard(params[0]);
+                    return handleIncomingVcard(params[0]);
                 } catch (Exception e) {
                     Log.e(getClass().getName(), "Processing of vcard failed",  e);
                 }
@@ -100,6 +107,7 @@ public class EditActivity extends ActionBarActivity {
                 if (contact == null) {
                     setResult(Activity.RESULT_CANCELED);
                     finish();
+                    return;
                 }
                 populateUiWith(contact);
             }
@@ -128,7 +136,7 @@ public class EditActivity extends ActionBarActivity {
         }.execute();
     }
 
-    private Contact handleSendVcard(Uri uri) throws Exception {
+    private Contact handleIncomingVcard(Uri uri) throws Exception {
         InputStream in = getContentResolver().openInputStream(uri);
         StringBuilder buffer = new StringBuilder();
         
@@ -145,15 +153,44 @@ public class EditActivity extends ActionBarActivity {
         }
 
         for (VNode node : builder.vNodeList) {
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, PropertyNode> map = new HashMap<String, PropertyNode>();
             for (PropertyNode curr : node.propList) {
-                map.put(curr.propName,  curr.propValue);
+                map.put(curr.propName,  curr);
             }
-            Log.e("TAG", "keys=" + map.keySet());
-            return new Contact(map.get("FN"), 0, map.get("EMAIL"), null);
+            PropertyNode photo = map.get("PHOTO");
+            String imageFileName = null;
+            if (photo != null) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(photo.propValue_bytes, 0, photo.propValue_bytes.length);
+                
+                File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                File file = new File(dir, "" + System.nanoTime());
+                FileOutputStream out = null;
+                try {
+                    out = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                    this.bitmap = bitmap;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                } finally {
+                   try{
+                       if (out != null) out.close();
+                   } catch(Throwable ignore) {}
+                }                
+                imageFileName = file.getAbsolutePath();
+            }
+                  
+            return new Contact(getVcardValue(map, "FN"), 0, 
+                    getVcardValue(map, "EMAIL"),
+                    imageFileName);
         }
         
         return null;
+    }
+
+    String getVcardValue(Map<String, PropertyNode> map, String key) {
+        PropertyNode prop = map.get(key);
+        return prop == null ? "" : prop.propValue;
     }
 
     void extractDetailsFromBundle(Bundle bundle) {
@@ -196,6 +233,8 @@ public class EditActivity extends ActionBarActivity {
         nameEdit.setText(contact.getName());
         emailEdit.setText(contact.getEmail());
         datePicker.setTime(birthdateMillis);
+        if (bitmap != null)
+            photo.setImageBitmap(bitmap);
         birthdateChanged(birthdateMillis);
     }
 }
