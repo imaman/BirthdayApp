@@ -1,15 +1,11 @@
 package com.example.birthdayapp;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 public final class ContactEntryContract {
     // To prevent someone from accidentally instantiating the contract class,
@@ -39,17 +35,17 @@ public final class ContactEntryContract {
         }
         
         public Contact(Context context, String name, long birthDate, String email, 
-                Bitmap image) {
-            this(context, null, name, birthDate, email, image);
+                String imageFileName) {
+            this(context, null, name, birthDate, email, imageFileName);
         }
         
         public Contact(Context context, Long id, String name, long birthDate, String email, 
-        		Bitmap image) {            
+                String imageFileName) {            
         	this.id = id == null ? System.currentTimeMillis() : id;
         	this.name = name;
         	this.birthDate = birthDate;
         	this.email = email;
-        	setImage(context, image);
+        	this.imageFileName = imageFileName;
         }
         
         public String toString() {
@@ -90,31 +86,6 @@ public final class ContactEntryContract {
 
         public void setBirthDate(long birthDate) {
         	this.birthDate = birthDate;
-        }
-
-        public void setImage(Context context, Bitmap image) {
-	    	if (image != null) {
-	      	  try {
-	      		String fileName = String.valueOf(id)+".png";
-	      	    FileOutputStream outputStream = 
-	      	    		context.openFileOutput(fileName, Context.MODE_PRIVATE);
-	      		image.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-	     			outputStream.close();
-	     			this.imageFileName = fileName;      			
-	          } catch (Exception e) {
-	        	e.printStackTrace();
-	          }
-	      	} else {
-	      		if (imageFileName != null && imageFileName.length() > 0) {
-	      			new File(imageFileName).delete();
-	      		}
-	      	}
-        }
-        
-        public Bitmap getImage() {
-        	if (imageFileName != null && imageFileName.length() > 0)
-        		return BitmapFactory.decodeFile(imageFileName);
-        	return null;
         }
 
         Calendar nextBirthday(Calendar now) {
