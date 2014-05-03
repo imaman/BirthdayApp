@@ -25,7 +25,7 @@ public class ContactsActivity extends ActionBarActivity {
 
     private static final int EDIT_CODE = 1;
 
-	private ContactDbHelper contactDbHelper;
+  private ContactDbHelper contactDbHelper;
 	private ListView contactsListView;
 	private ContactsAdapter contactsAdapter;
 	List<Contact> contactsList;

@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.birthdayapp.ContactEntryContract.Contact;
 
@@ -109,10 +108,6 @@ public class EditActivity extends ActionBarActivity {
     }
 
     protected void saveAndExit(final Contact contact) {
-        Toast.makeText(this, 
-                (update ? "updating " : "creating ") + contact.getEntryId() + " " + contact.getName(), 
-                Toast.LENGTH_LONG).show();
-        
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -196,9 +191,6 @@ public class EditActivity extends ActionBarActivity {
     }
 
     void populateUiWith(Contact contact) {
-        Toast.makeText(this, "populating " + contact.getEntryId() + ", " + contact.getName() + " update?" + update, 
-                Toast.LENGTH_LONG).show();
-        
         contactId = contact.getEntryId();
         long birthdateMillis = contact.getBirthDate();
         nameEdit.setText(contact.getName());

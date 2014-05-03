@@ -14,17 +14,13 @@ public class Ui {
         return days == 0 ? "Today" : ("In " + days + " day" + (days == 1 ? "" : "s"));
     }
 
-    private static void storeContactInBundle(final Contact contact, Bundle bundle) {
+    public static Bundle bundleFromContact(Contact contact) {
+        Bundle bundle = new Bundle();
         long id = contact.getEntryId();
         bundle.putLong(Items.CONTACT_ID, id);
         bundle.putString(Items.ITEM_NAME, contact.getName());
         bundle.putLong(Items.ITEM_BIRTHDATE, contact.getBirthDate());
         bundle.putString(Items.ITEM_EMAIL, contact.getEmail());
-    }
-
-    public static Bundle bundleFromContact(Contact contact) {
-        Bundle bundle = new Bundle();
-        storeContactInBundle(contact, bundle);
         return bundle;
     }
     
