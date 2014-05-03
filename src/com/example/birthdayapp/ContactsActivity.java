@@ -140,7 +140,7 @@ public class ContactsActivity extends ActionBarActivity {
     }
 
     public void addContact() {
-        editContact(new Contact(this, "", 0, "", null), false);
+        editContact(new Contact("", 0, "", null), false);
     }
     
     @Override 
@@ -149,7 +149,7 @@ public class ContactsActivity extends ActionBarActivity {
       switch(requestCode) { 
         case (EDIT_CODE) : { 
           if (resultCode == Activity.RESULT_OK) {        	  
-        	  Contact returned = Ui.contactFromBundle(this, data.getBundleExtra("contact"));
+        	  Contact returned = Ui.contactFromBundle(data.getBundleExtra("contact"));
         	  long id = returned.id();
         	  if (id < 0)
         	      break;

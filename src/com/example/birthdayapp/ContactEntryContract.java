@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.content.Context;
 import android.database.Cursor;
 
 public final class ContactEntryContract {
@@ -34,13 +33,12 @@ public final class ContactEntryContract {
         	this.imageFileName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_IMAGE));      	
         }
         
-        public Contact(Context context, String name, long birthDate, String email, 
+        public Contact(String name, long birthDate, String email, 
                 String imageFileName) {
-            this(context, null, name, birthDate, email, imageFileName);
+            this(null, name, birthDate, email, imageFileName);
         }
         
-        public Contact(Context context, Long id, String name, long birthDate, String email, 
-                String imageFileName) {            
+        public Contact(Long id, String name, long birthDate, String email, String imageFileName) {            
         	this.id = id == null ? System.currentTimeMillis() : id;
         	this.name = name;
         	this.birthDate = birthDate;

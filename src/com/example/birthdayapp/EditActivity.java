@@ -59,9 +59,8 @@ public class EditActivity extends ActionBarActivity {
         actionBar.getCustomView().findViewById(R.id.action_done).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Contact newContact = new Contact(EditActivity.this,
-                        contactId,
-                        nameEdit.getText().toString(), 
+                Contact newContact = new Contact(contactId,
+                        nameEdit.getText().toString(),
                         birthDateInMillis, 
                         emailEdit.getText().toString(), 
                         null);
@@ -150,7 +149,8 @@ public class EditActivity extends ActionBarActivity {
             for (PropertyNode curr : node.propList) {
                 map.put(curr.propName,  curr.propValue);
             }
-            return new Contact(this, map.get("FN"), 0, map.get("EMAIL"), null);
+            Log.e("TAG", "keys=" + map.keySet());
+            return new Contact(map.get("FN"), 0, map.get("EMAIL"), null);
         }
         
         return null;
@@ -160,10 +160,10 @@ public class EditActivity extends ActionBarActivity {
         Contact contact;
         if (bundle.getBoolean("create",  false)) {
             update = false;
-            contact = new Contact(this, null, "???", 0, "???", null);            
+            contact = new Contact(null, "???", 0, "???", null);            
         } else {
             update = true;
-            contact = Ui.contactFromBundle(this, bundle);
+            contact = Ui.contactFromBundle(bundle);
         }
         
         populateUiWith(contact);

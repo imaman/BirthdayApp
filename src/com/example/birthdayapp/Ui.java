@@ -2,7 +2,6 @@ package com.example.birthdayapp;
 
 import java.util.Calendar;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import com.example.birthdayapp.ContactEntryContract.Contact;
@@ -24,12 +23,12 @@ public class Ui {
         return bundle;
     }
     
-    static Contact contactFromBundle(Context context, Bundle extras) {
+    static Contact contactFromBundle(Bundle extras) {
         Long id = extras.getLong(Items.CONTACT_ID);
         String name = extras.getString(Items.ITEM_NAME, "???");            
         String emailAddress = extras.getString(Items.ITEM_EMAIL, "???");            
         long birthdateMillis = extras.getLong(Items.ITEM_BIRTHDATE);
-        return new Contact(context, id, name, birthdateMillis, emailAddress, null);
+        return new Contact(id, name, birthdateMillis, emailAddress, null);
     }
 
 
