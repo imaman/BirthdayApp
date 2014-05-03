@@ -77,7 +77,7 @@ public class ContactsActivity extends ActionBarActivity {
         
     private Contact contactFromId(long id) {
         for (Contact curr : contactsList) {
-            if (curr.getEntryId() == id)
+            if (curr.id() == id)
                 return curr;
         }
         return null;
@@ -101,7 +101,7 @@ public class ContactsActivity extends ActionBarActivity {
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
                 // TODO(imaman): this should be an async task.
-                contactDbHelper.deleteEntry(contactToDelete.getEntryId());
+                contactDbHelper.deleteEntry(contactToDelete.id());
                 contactsList.remove(contactToDelete);
                 dataChanged();
             }
@@ -150,7 +150,7 @@ public class ContactsActivity extends ActionBarActivity {
         case (EDIT_CODE) : { 
           if (resultCode == Activity.RESULT_OK) {        	  
         	  Contact returned = Ui.contactFromBundle(this, data.getBundleExtra("contact"));
-        	  long id = returned.getEntryId();
+        	  long id = returned.id();
         	  if (id < 0)
         	      break;
         	  

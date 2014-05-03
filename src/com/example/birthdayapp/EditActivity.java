@@ -191,7 +191,7 @@ public class EditActivity extends ActionBarActivity {
     }
 
     void populateUiWith(Contact contact) {
-        contactId = contact.getEntryId();
+        contactId = contact.id();
         long birthdateMillis = contact.getBirthDate();
         nameEdit.setText(contact.getName());
         emailEdit.setText(contact.getEmail());

@@ -26,7 +26,7 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
     
     @Override
     public long getItemId(int position) {
-        return this.contacts.get(position).getEntryId();
+        return this.contacts.get(position).id();
     }
 
     @Override public View getView (final int position, View convertView, ViewGroup parent) {

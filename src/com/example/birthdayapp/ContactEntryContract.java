@@ -24,14 +24,14 @@ public final class ContactEntryContract {
         public static final String COLUMN_NAME_BIRTH_DATE = "birthdate";
         public static final String COLUMN_NAME_IMAGE = "image";
         public static final String COLUMN_NAME_EMAIL = "email";
-        private long entryId;
+        private long id;
         private String name;
         private String email;
         private long birthDate;
         private String imageFileName;
         
         public Contact(Cursor cursor) {
-        	this.entryId = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_NAME_ENTRY_ID));
+        	this.id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_NAME_ENTRY_ID));
         	this.name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_NAME));
         	this.birthDate = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_NAME_BIRTH_DATE));
         	this.email = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_EMAIL));
@@ -45,7 +45,7 @@ public final class ContactEntryContract {
         
         public Contact(Context context, Long id, String name, long birthDate, String email, 
         		Bitmap image) {            
-        	this.entryId = id == null ? System.currentTimeMillis() : id;
+        	this.id = id == null ? System.currentTimeMillis() : id;
         	this.name = name;
         	this.birthDate = birthDate;
         	this.email = email;
@@ -53,11 +53,11 @@ public final class ContactEntryContract {
         }
         
         public String toString() {
-            return this.name + " #" + this.entryId;
+            return this.name + " #" + this.id;
         }
         
-        public long getEntryId() {
-        	return entryId;
+        public long id() {
+        	return id;
         }
         
         public String getName() {
@@ -95,7 +95,7 @@ public final class ContactEntryContract {
         public void setImage(Context context, Bitmap image) {
 	    	if (image != null) {
 	      	  try {
-	      		String fileName = String.valueOf(entryId)+".png";
+	      		String fileName = String.valueOf(id)+".png";
 	      	    FileOutputStream outputStream = 
 	      	    		context.openFileOutput(fileName, Context.MODE_PRIVATE);
 	      		image.compress(Bitmap.CompressFormat.PNG, 100, outputStream);

@@ -46,7 +46,7 @@ public class ContactDbHelper extends SQLiteOpenHelper {
     	SQLiteDatabase db = getWritableDatabase();
     	// Create a new map of values, where column names are the keys
     	ContentValues values = new ContentValues();
-    	values.put(Contact.COLUMN_NAME_ENTRY_ID, entry.getEntryId());
+    	values.put(Contact.COLUMN_NAME_ENTRY_ID, entry.id());
     	values.put(Contact.COLUMN_NAME_NAME, entry.getName());
     	values.put(Contact.COLUMN_NAME_BIRTH_DATE, entry.getBirthDate());
     	values.put(Contact.COLUMN_NAME_EMAIL, entry.getEmail());
@@ -61,7 +61,7 @@ public class ContactDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(Contact.COLUMN_NAME_ENTRY_ID, entry.getEntryId());
+        values.put(Contact.COLUMN_NAME_ENTRY_ID, entry.id());
         values.put(Contact.COLUMN_NAME_NAME, entry.getName());
         values.put(Contact.COLUMN_NAME_BIRTH_DATE, entry.getBirthDate());
         values.put(Contact.COLUMN_NAME_EMAIL, entry.getEmail());
@@ -70,7 +70,7 @@ public class ContactDbHelper extends SQLiteOpenHelper {
 
         // Insert the new row, returning the primary key value of the new row
         String selection = Contact.COLUMN_NAME_ENTRY_ID + " LIKE ?";
-        String[] selectionArgs = { String.valueOf(entry.getEntryId()) };
+        String[] selectionArgs = { String.valueOf(entry.id()) };
         return db.update(Contact.TABLE_NAME, values, selection, selectionArgs);
     }
     

@@ -16,7 +16,7 @@ public class Ui {
 
     public static Bundle bundleFromContact(Contact contact) {
         Bundle bundle = new Bundle();
-        long id = contact.getEntryId();
+        long id = contact.id();
         bundle.putLong(Items.CONTACT_ID, id);
         bundle.putString(Items.ITEM_NAME, contact.getName());
         bundle.putLong(Items.ITEM_BIRTHDATE, contact.getBirthDate());
