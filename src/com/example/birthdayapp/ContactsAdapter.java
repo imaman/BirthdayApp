@@ -1,14 +1,14 @@
 package com.example.birthdayapp;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,7 +33,7 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
         }
     }
     
-    private final Map<String, BitmapStatus> bitmapByFilename = new HashMap<String, BitmapStatus>();
+    private final LruCache<String, BitmapStatus> bitmapByFilename = new LruCache<String, BitmapStatus>(40);
     public ContactsAdapter(Context context, List<Contact> contacts, ContactsActivity contactsActivity) {
 	  super(context, R.layout.contact_entry, contacts);
 	  
@@ -64,18 +64,8 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
   		timeLeftView.setText(Ui.daysLeftMessage(now, contact));
 
   		ImageView photo = (ImageView) convertView.findViewById(R.id.contactImage);
-        BitmapStatus status = bitmapByFilename.get(contact.getImageFileName());
-        if (status == null) {
-            status = new BitmapStatus();
-            bitmapByFilename.put(contact.getImageFileName(), status);
-        }
-        if (status.shouldRequest()) {
-            status.requested = true;
-            fetch(contact.getImageFileName(), status);
-        }
-        
-        Bitmap bm = status.bitmap;
-        photo.setImageBitmap(bm);
+        assignPhoto(contact, photo);
+            
   		convertView.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -89,6 +79,32 @@ public class ContactsAdapter extends ArrayAdapter<Contact> {
             }
         });
   		return convertView;
+    }
+
+    void assignPhoto(Contact contact, ImageView photo) {
+        String imageFileName = contact.getImageFileName();
+        Drawable drawable = contactsActivity.getResources().getDrawable(R.drawable.ic_launcher);
+        if (imageFileName == null) {
+            photo.setImageDrawable(drawable);
+            return;
+        }
+        BitmapStatus status = bitmapByFilename.get(imageFileName);
+        if (status == null) {
+            status = new BitmapStatus();
+            bitmapByFilename.put(imageFileName, status);
+        }
+        if (status.shouldRequest()) {
+            status.requested = true;
+            fetch(imageFileName, status);
+        }
+        
+        Bitmap bm = status.bitmap;
+        if (bm != null) {
+            photo.setImageBitmap(bm);
+            return;
+        }
+        
+        photo.setImageDrawable(drawable);
     }
 
     private void fetch(final String filename, final BitmapStatus status) {
