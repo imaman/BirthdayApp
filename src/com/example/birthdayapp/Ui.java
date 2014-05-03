@@ -20,6 +20,7 @@ public class Ui {
         bundle.putString(Items.ITEM_NAME, contact.getName());
         bundle.putLong(Items.ITEM_BIRTHDATE, contact.getBirthDate());
         bundle.putString(Items.ITEM_EMAIL, contact.getEmail());
+        bundle.putString(Items.ITEM_FILENAME, contact.getImageFileName());
         return bundle;
     }
     
@@ -28,7 +29,8 @@ public class Ui {
         String name = extras.getString(Items.ITEM_NAME, "???");            
         String emailAddress = extras.getString(Items.ITEM_EMAIL, "???");            
         long birthdateMillis = extras.getLong(Items.ITEM_BIRTHDATE);
-        return new Contact(id, name, birthdateMillis, emailAddress, null);
+        String filename = extras.getString(Items.ITEM_FILENAME);
+        return new Contact(id, name, birthdateMillis, emailAddress, filename);
     }
 
 

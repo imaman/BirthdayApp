@@ -46,12 +46,16 @@ public class EditActivity extends ActionBarActivity {
     private boolean update = false;
     private ImageView photo = null;
     private Bitmap bitmap = null;
+    private String imageFileName = null;
+
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        bitmap = null;
+        imageFileName = null;
         
         ActionBar actionBar = getActionBar();
         actionBar.setCustomView(R.layout.activity_edit_custom_action_bar);
@@ -71,7 +75,7 @@ public class EditActivity extends ActionBarActivity {
                         nameEdit.getText().toString(),
                         birthDateInMillis, 
                         emailEdit.getText().toString(), 
-                        null);
+                        imageFileName);
                 saveAndExit(newContact);
             }
         });
@@ -168,7 +172,6 @@ public class EditActivity extends ActionBarActivity {
                 try {
                     out = new FileOutputStream(file);
                     bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                    this.bitmap = bitmap;
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;
@@ -233,8 +236,26 @@ public class EditActivity extends ActionBarActivity {
         nameEdit.setText(contact.getName());
         emailEdit.setText(contact.getEmail());
         datePicker.setTime(birthdateMillis);
+        imageFileName = contact.getImageFileName();
         if (bitmap != null)
             photo.setImageBitmap(bitmap);
+        else {
+            final String filename = contact.getImageFileName();
+            if (filename != null) {
+                new AsyncTask<Void, Void, Bitmap>() {
+                    @Override
+                    protected Bitmap doInBackground(Void... params) {
+                        return BitmapFactory.decodeFile(filename);
+                    }
+        
+                    @Override
+                    protected void onPostExecute(Bitmap result) {
+                        EditActivity.this.bitmap = result;
+                        photo.setImageBitmap(result);
+                    }
+                }.execute();
+            }
+        }
         birthdateChanged(birthdateMillis);
     }
 }
